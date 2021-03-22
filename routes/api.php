@@ -16,8 +16,12 @@ use Illuminate\Support\Facades\Route;
 
 Route::group(['middleware' => ['auth:api']], function (){
     Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
+    //Project routes
     Route::get('/projects/list', [\App\Http\Controllers\ProjectsController::class, 'index']);
     Route::post('/projects/save', [\App\Http\Controllers\ProjectsController::class, 'store']);
+    Route::put('/projects/update/{id}', [\App\Http\Controllers\ProjectsController::class, 'update']);
+    Route::delete('/projects/delete/{id}', [\App\Http\Controllers\ProjectsController::class, 'destroy']);
+    //request routs
     Route::get('requests/list', [\App\Http\Controllers\OrderController::class, 'index']);
     Route::post('requests/save', [\App\Http\Controllers\OrderController::class, 'store']);
     Route::put('requests/update/{id}', [\App\Http\Controllers\OrderController::class, 'update']);

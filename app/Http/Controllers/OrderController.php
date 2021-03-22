@@ -69,7 +69,7 @@ class OrderController extends Controller
         }
         $orders = Orders::find($id);
         $orders->update($input);
-        return response(['message' => 'Request Updated', 'request' => $orders, 'input' => $input], 200);
+        return response(['message' => 'Request Updated', 'request' => $orders], 200);
 
     }
 
