@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Projects;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 
 class ProjectsController extends Controller
 {
@@ -14,7 +16,8 @@ class ProjectsController extends Controller
      */
     public function index()
     {
-        //
+        $projects = Projects::all();
+        return response(['projects' => $projects], 200);
     }
 
     /**
@@ -22,11 +25,6 @@ class ProjectsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      *
@@ -35,7 +33,45 @@ class ProjectsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validator = Validator::make($request->all(), [
+            'project_name' => 'required|max:255|string',
+            'date' => 'required|string',
+            'type' => 'required|string',
+            'file_number' => 'required|string',
+            'mission_code' => 'required|string',
+            'location' => 'required|string',
+            'status' => 'required|string',
+            'init_contact' => 'required|string',
+            'email' => 'required|email|string',
+            'pharmacist' => 'required|string',
+            'exchange_rate' => 'required|string',
+            'order_number' => 'required|string',
+            'reference' => 'required|string'
+        ]);
+        if ($validator->fails())
+        {
+            return response(['message' => $validator->errors()->all()], 422);
+        }
+        $project = new Projects();
+        $init_string = "PROJ";
+        $project->project_code = $init_string.mt_rand(0, 999);
+        $project->project_name = $request['project_name'];
+        $project->initiator = Auth::user()->name;
+        $project->unit = Auth::user()->unit;
+        $project->date = $request['date'];
+        $project->type = $request['type'];
+        $project->file_number = $request['file_number'];
+        $project->mission_code = $request['mission_code'];
+        $project->location = $request['location'];
+        $project->status = $request['status'];
+        $project->init_contact = $request['init_contact'];
+        $project->email = $request['email'];
+        $project->pharmacist = $request['pharmacist'];
+        $project->exchange_rate = $request['exchange_rate'];
+        $project->order_number = $request['order_number'];
+        $project->reference = $request['reference'];
+        $project->save();
+        return response(['message' => $project, 'response'=>"data saved"], 200);
     }
 
     /**
@@ -44,10 +80,7 @@ class ProjectsController extends Controller
      * @param  \App\Models\Projects  $projects
      * @return \Illuminate\Http\Response
      */
-    public function show(Projects $projects)
-    {
-        //
-    }
+
 
     /**
      * Show the form for editing the specified resource.
@@ -55,10 +88,6 @@ class ProjectsController extends Controller
      * @param  \App\Models\Projects  $projects
      * @return \Illuminate\Http\Response
      */
-    public function edit(Projects $projects)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
